@@ -78,7 +78,6 @@ public class DetailActivity extends AppCompatActivity
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                task.priority = position;
-               Log.d("TRUONG", "priority: " + task.priority);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {

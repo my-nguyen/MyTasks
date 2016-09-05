@@ -1,7 +1,9 @@
 package com.nguyen.mytasks;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,9 @@ import java.util.List;
  * Created by My on 9/4/2016.
  */
 public class TasksAdapter extends ArrayAdapter<Task> {
+   static final int REQUEST_CODE = 100;
+   int mPosition;
+
    static class ViewHolder {
       TextView name;
       TextView date;
@@ -48,11 +53,25 @@ public class TasksAdapter extends ArrayAdapter<Task> {
       viewHolder.edit.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {
+            mPosition = position;
+            Log.d("TRUONG", "mPosition: " + mPosition);
             Intent i = DetailActivity.newIntent(getContext(), task);
-            getContext().startActivity(i);
+            ((Activity)getContext()).startActivityForResult(i, REQUEST_CODE);
          }
       });
 
       return convertView;
+   }
+
+   public void onActivityResult(int requestCode, int resultCode, Intent data) {
+      if (requestCode == REQUEST_CODE) {
+         if (resultCode == ((Activity)getContext()).RESULT_OK) {
+            Task updatedTask = (Task)data.getSerializableExtra("TASK_OUT");
+            Log.d("TRUONG", "Position:" + mPosition + ", Task::" + updatedTask);
+            Task currentTask = getItem(mPosition);
+            currentTask.update(updatedTask);
+            notifyDataSetChanged();
+         }
+      }
    }
 }

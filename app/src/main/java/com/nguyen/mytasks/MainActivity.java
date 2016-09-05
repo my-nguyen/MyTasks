@@ -15,6 +15,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
    static int REQUEST_CODE = 100;
+   TasksAdapter adapter;
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
       setContentView(R.layout.activity_main);
 
       List<Task> tasks = generateTasks();
-      TasksAdapter adapter = new TasksAdapter(this, tasks);
+      adapter = new TasksAdapter(this, tasks);
       ListView list = (ListView)findViewById(R.id.tasks);
       list.setAdapter(adapter);
 
@@ -40,8 +41,8 @@ public class MainActivity extends AppCompatActivity {
    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
       if (requestCode == REQUEST_CODE) {
          if (resultCode == RESULT_OK) {
-            Task task = (Task)data.getSerializableExtra("TASK_OUT");
-            Log.d("TRUONG", "Task received::" + task);
+            adapter.onActivityResult(requestCode, resultCode, data);
+            // adapter.notifyDataSetChanged();
          }
       }
    }

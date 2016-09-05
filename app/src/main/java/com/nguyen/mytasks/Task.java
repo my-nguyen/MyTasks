@@ -28,6 +28,13 @@ public class Task implements Serializable {
       this.note = note;
    }
 
+   public void update(Task rhs) {
+      name = rhs.name;
+      calendar = rhs.calendar;
+      priority = rhs.priority;
+      note = rhs.note;
+   }
+
    @Override
    public String toString() {
       final String SEPARATOR = "::";
