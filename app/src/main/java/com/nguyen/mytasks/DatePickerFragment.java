@@ -8,7 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.widget.DatePicker;
 
 import java.util.Calendar;
-import java.util.GregorianCalendar;
+import java.util.Date;
 
 /**
  * Created by My on 9/4/2016.
@@ -18,10 +18,10 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
       void onFinishDate(int year, int month, int day);
    }
 
-   public static DatePickerFragment newInstance(Calendar calendar)
+   public static DatePickerFragment newInstance(Date date)
    {
       Bundle bundle = new Bundle();
-      bundle.putSerializable("CALENDAR_IN", calendar);
+      bundle.putSerializable("DATE_IN", date);
       DatePickerFragment fragment = new DatePickerFragment();
       fragment.setArguments(bundle);
       return fragment;
@@ -30,7 +30,12 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
    @NonNull
    @Override
    public Dialog onCreateDialog(Bundle savedInstanceState) {
-      Calendar calendar = (Calendar)getArguments().getSerializable("CALENDAR_IN");
+      // receive a Date object
+      Date date = (Date)getArguments().getSerializable("DATE_IN");
+      // convert the Date object to a Calendar object, to extract the year, month and day, for
+      // displaying them in the DatePickerDialog
+      Calendar calendar = Calendar.getInstance();
+      calendar.setTime(date);
       int year = calendar.get(Calendar.YEAR);
       int monthOfYear = calendar.get(Calendar.MONTH);
       int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);

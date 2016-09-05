@@ -23,9 +23,6 @@ public class MainActivity extends AppCompatActivity {
       setContentView(R.layout.activity_main);
 
       List<Task> tasks = generateTasks();
-      for (Task task : tasks) {
-         Log.d("TRUONG", "MainActivity::" + task);
-      }
       mAdapter = new TasksAdapter(this, tasks);
       ListView list = (ListView)findViewById(R.id.tasks);
       list.setAdapter(mAdapter);
@@ -56,13 +53,10 @@ public class MainActivity extends AppCompatActivity {
       int add = -(names.size() / 2);
       calendar.add(Calendar.DAY_OF_MONTH, add);
       for (String name : names) {
-         Task task = new Task(name, calendar, 0, "Empty note");
+         Task task = new Task(name, calendar.getTime(), 0, "Empty note");
          Log.d("TRUONG", "generateTasks::" + task);
          tasks.add(task);
          calendar.add(Calendar.DAY_OF_MONTH, 1);
-      }
-      for (Task task : tasks) {
-         Log.d("TRUONG", "generateTasks::" + task);
       }
       return tasks;
    }

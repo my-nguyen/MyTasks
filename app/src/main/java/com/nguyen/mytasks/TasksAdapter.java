@@ -29,9 +29,6 @@ public class TasksAdapter extends ArrayAdapter<Task> {
 
    public TasksAdapter(Context context, List<Task> tasks) {
       super(context, 0, tasks);
-      for (Task task : tasks) {
-         Log.d("TRUONG", "TasksAdapter::" + task);
-      }
    }
 
    @Override
@@ -52,8 +49,7 @@ public class TasksAdapter extends ArrayAdapter<Task> {
 
       final Task task = getItem(position);
       viewHolder.name.setText(task.name);
-      viewHolder.date.setText(Utils.getDateFromCalendar(task.calendar));
-      // Log.d("TRUONG", "TaskAdapter::" + task);
+      viewHolder.date.setText(Utils.getDateFromDate(task.date));
       viewHolder.edit.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {

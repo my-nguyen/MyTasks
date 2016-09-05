@@ -8,6 +8,7 @@ import android.support.v4.app.DialogFragment;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by My on 9/4/2016.
@@ -17,10 +18,10 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
       void onFinishTime(int hour, int minute);
    }
 
-   public static TimePickerFragment newInstance(Calendar calendar)
+   public static TimePickerFragment newInstance(Date date)
    {
       Bundle bundle = new Bundle();
-      bundle.putSerializable("CALENDAR_IN", calendar);
+      bundle.putSerializable("DATE_IN", date);
       TimePickerFragment fragment = new TimePickerFragment();
       fragment.setArguments(bundle);
       return fragment;
@@ -29,7 +30,9 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
    @NonNull
    @Override
    public Dialog onCreateDialog(Bundle savedInstanceState) {
-      Calendar calendar = (Calendar)getArguments().getSerializable("CALENDAR_IN");
+      Date date = (Date)getArguments().getSerializable("DATE_IN");
+      Calendar calendar = Calendar.getInstance();
+      calendar.setTime(date);
       int hour = calendar.get(Calendar.HOUR_OF_DAY);
       int minute = calendar.get(Calendar.MINUTE);
       return new TimePickerDialog(getActivity(), this, hour, minute, false);

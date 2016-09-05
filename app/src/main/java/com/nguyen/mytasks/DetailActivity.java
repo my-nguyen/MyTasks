@@ -16,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class DetailActivity extends AppCompatActivity
       implements DatePickerFragment.DatePickerListener, TimePickerFragment.TimePickerListener {
@@ -49,21 +50,21 @@ public class DetailActivity extends AppCompatActivity
       } else {
          taskName.setText(mTask.name);
 
-         final Calendar calendar = mTask.calendar;
-         dueDate.setText(Utils.getDateFromCalendar(calendar));
-         dueTime.setText(Utils.getTimeFromCalendar(calendar));
+         final Date date = mTask.date;
+         dueDate.setText(Utils.getDateFromDate(date));
+         dueTime.setText(Utils.getTimeFromDate(date));
 
          datePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               DialogFragment fragment = DatePickerFragment.newInstance(calendar);
+               DialogFragment fragment = DatePickerFragment.newInstance(date);
                fragment.show(getSupportFragmentManager(), "DATE_PICKER");
             }
          });
          timePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               DialogFragment fragment = TimePickerFragment.newInstance(calendar);
+               DialogFragment fragment = TimePickerFragment.newInstance(date);
                fragment.show(getSupportFragmentManager(), "TIME_PICKER");
             }
          });
@@ -102,16 +103,20 @@ public class DetailActivity extends AppCompatActivity
 
    @Override
    public void onFinishDate(int year, int month, int day) {
-      mTask.calendar.set(Calendar.YEAR, year);
-      mTask.calendar.set(Calendar.MONTH, month);
-      mTask.calendar.set(Calendar.DAY_OF_MONTH, day);
-      dueDate.setText(Utils.getDateFromCalendar(mTask.calendar));
+      Calendar calendar = Calendar.getInstance();
+      calendar.set(Calendar.YEAR, year);
+      calendar.set(Calendar.MONTH, month);
+      calendar.set(Calendar.DAY_OF_MONTH, day);
+      mTask.date = calendar.getTime();
+      dueDate.setText(Utils.getDateFromDate(mTask.date));
    }
 
    @Override
    public void onFinishTime(int hour, int minute) {
-      mTask.calendar.set(Calendar.HOUR_OF_DAY, hour);
-      mTask.calendar.set(Calendar.MINUTE, minute);
-      dueTime.setText(Utils.getTimeFromCalendar(mTask.calendar));
+      Calendar calendar = Calendar.getInstance();
+      calendar.set(Calendar.HOUR_OF_DAY, hour);
+      calendar.set(Calendar.MINUTE, minute);
+      mTask.date = calendar.getTime();
+      dueTime.setText(Utils.getTimeFromDate(mTask.date));
    }
 }

@@ -3,7 +3,7 @@ package com.nguyen.mytasks;
 import android.text.format.DateUtils;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by My on 9/4/2016.
@@ -19,13 +19,13 @@ public class Utils {
       return tokens[0] + tokens[1].charAt(0);
    }
 
-   public static String getDateFromCalendar(Calendar calendar) {
+   public static String getDateFromDate(Date date) {
       SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy");
-      return dateFormat.format(calendar.getTime());
+      return dateFormat.format(date);
    }
 
-   public static String getTimeFromCalendar(Calendar calendar) {
-      SimpleDateFormat timeFormat = new SimpleDateFormat("h:m a");
-      return timeFormat.format(calendar.getTime());
+   public static String getTimeFromDate(Date date) {
+      SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");
+      return timeFormat.format(date);
    }
 }

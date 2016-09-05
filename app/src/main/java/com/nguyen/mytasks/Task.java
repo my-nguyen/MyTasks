@@ -2,7 +2,6 @@ package com.nguyen.mytasks;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -10,27 +9,30 @@ import java.util.Date;
  */
 public class Task implements Serializable {
    public String name;
-   public Calendar calendar;
+   // use Date instead of Calendar here because Calendar is a global object, so adding or subtracting
+   // days on a Calendar object will have its global effect. whereas Date is local, so such
+   // modification has no effect.
+   public Date date;
    public int priority;
    public String note;
 
    public Task() {
       name = "";
-      calendar = Calendar.getInstance();
+      date = new Date();
       priority = 0;
       note = "";
    }
 
-   public Task(String name, Calendar calendar, int priority, String note) {
+   public Task(String name, Date date, int priority, String note) {
       this.name = name;
-      this.calendar = calendar;
+      this.date = date;
       this.priority = priority;
       this.note = note;
    }
 
    public void update(Task rhs) {
       name = rhs.name;
-      calendar = rhs.calendar;
+      date = rhs.date;
       priority = rhs.priority;
       note = rhs.note;
    }
@@ -40,7 +42,6 @@ public class Task implements Serializable {
       final String SEPARATOR = "::";
       StringBuilder builder = new StringBuilder();
       builder.append(name).append(SEPARATOR);
-      Date date = calendar.getTime();
       SimpleDateFormat format = new SimpleDateFormat("MMMM d, yyyy h:m a");
       String dateString = format.format(date);
       builder.append(dateString).append(SEPARATOR);
