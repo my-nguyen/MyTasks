@@ -15,7 +15,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
    static int REQUEST_CODE = 100;
-   TasksAdapter adapter;
+   TasksAdapter mAdapter;
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +23,12 @@ public class MainActivity extends AppCompatActivity {
       setContentView(R.layout.activity_main);
 
       List<Task> tasks = generateTasks();
-      adapter = new TasksAdapter(this, tasks);
+      for (Task task : tasks) {
+         Log.d("TRUONG", "MainActivity::" + task);
+      }
+      mAdapter = new TasksAdapter(this, tasks);
       ListView list = (ListView)findViewById(R.id.tasks);
-      list.setAdapter(adapter);
+      list.setAdapter(mAdapter);
 
       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
       fab.setOnClickListener(new View.OnClickListener() {
@@ -41,8 +44,7 @@ public class MainActivity extends AppCompatActivity {
    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
       if (requestCode == REQUEST_CODE) {
          if (resultCode == RESULT_OK) {
-            adapter.onActivityResult(requestCode, resultCode, data);
-            // adapter.notifyDataSetChanged();
+            mAdapter.onActivityResult(requestCode, resultCode, data);
          }
       }
    }
@@ -51,10 +53,16 @@ public class MainActivity extends AppCompatActivity {
       List<String> names = Arrays.asList("One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten");
       List<Task> tasks = new ArrayList<>();
       Calendar calendar = Calendar.getInstance();
-      calendar.add(Calendar.DAY_OF_MONTH, -names.size()/2);
+      int add = -(names.size() / 2);
+      calendar.add(Calendar.DAY_OF_MONTH, add);
       for (String name : names) {
-         tasks.add(new Task(name, calendar, 0, name));
+         Task task = new Task(name, calendar, 0, "Empty note");
+         Log.d("TRUONG", "generateTasks::" + task);
+         tasks.add(task);
          calendar.add(Calendar.DAY_OF_MONTH, 1);
+      }
+      for (Task task : tasks) {
+         Log.d("TRUONG", "generateTasks::" + task);
       }
       return tasks;
    }

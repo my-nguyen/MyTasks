@@ -29,6 +29,9 @@ public class TasksAdapter extends ArrayAdapter<Task> {
 
    public TasksAdapter(Context context, List<Task> tasks) {
       super(context, 0, tasks);
+      for (Task task : tasks) {
+         Log.d("TRUONG", "TasksAdapter::" + task);
+      }
    }
 
    @Override
@@ -49,12 +52,12 @@ public class TasksAdapter extends ArrayAdapter<Task> {
 
       final Task task = getItem(position);
       viewHolder.name.setText(task.name);
-      // viewHolder.date.setText(task.date);
+      viewHolder.date.setText(Utils.getDateFromCalendar(task.calendar));
+      // Log.d("TRUONG", "TaskAdapter::" + task);
       viewHolder.edit.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {
             mPosition = position;
-            Log.d("TRUONG", "mPosition: " + mPosition);
             Intent i = DetailActivity.newIntent(getContext(), task);
             ((Activity)getContext()).startActivityForResult(i, REQUEST_CODE);
          }
@@ -67,7 +70,7 @@ public class TasksAdapter extends ArrayAdapter<Task> {
       if (requestCode == REQUEST_CODE) {
          if (resultCode == ((Activity)getContext()).RESULT_OK) {
             Task updatedTask = (Task)data.getSerializableExtra("TASK_OUT");
-            Log.d("TRUONG", "Position:" + mPosition + ", Task::" + updatedTask);
+            Log.d("TRUONG", "TaskAdapter::" + updatedTask);
             Task currentTask = getItem(mPosition);
             currentTask.update(updatedTask);
             notifyDataSetChanged();

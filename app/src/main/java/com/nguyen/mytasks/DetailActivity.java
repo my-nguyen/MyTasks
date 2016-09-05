@@ -15,12 +15,11 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 public class DetailActivity extends AppCompatActivity
       implements DatePickerFragment.DatePickerListener, TimePickerFragment.TimePickerListener {
-   Task task;
+   Task mTask;
    TextView dueDate;
    TextView dueTime;
 
@@ -44,15 +43,15 @@ public class DetailActivity extends AppCompatActivity
       final EditText noteText = (EditText)findViewById(R.id.note_text);
       Button save = (Button)findViewById(R.id.save);
 
-      task = (Task)getIntent().getSerializableExtra("TASK_IN");
-      if (task == null) {
-         task = new Task();
+      mTask = (Task)getIntent().getSerializableExtra("TASK_IN");
+      if (mTask == null) {
+         mTask = new Task();
       } else {
-         taskName.setText(task.name);
+         taskName.setText(mTask.name);
 
-         final Calendar calendar = task.calendar;
-         dueDate.setText(getDateFromCalendar(calendar));
-         dueTime.setText(getTimeFromCalendar(calendar));
+         final Calendar calendar = mTask.calendar;
+         dueDate.setText(Utils.getDateFromCalendar(calendar));
+         dueTime.setText(Utils.getTimeFromCalendar(calendar));
 
          datePicker.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,28 +72,28 @@ public class DetailActivity extends AppCompatActivity
                R.array.priority_array, android.R.layout.simple_spinner_item);
          adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
          prioritySpinner.setAdapter(adapter);
-         prioritySpinner.setSelection(task.priority);
+         prioritySpinner.setSelection(mTask.priority);
          prioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-               task.priority = position;
+               mTask.priority = position;
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
          });
 
-         noteText.setText(task.note);
+         noteText.setText(mTask.note);
       }
 
       save.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {
-            task.name = taskName.getText().toString();
-            task.note = noteText.getText().toString();
-            Log.d("TRUONG", "TASK::" + task);
+            mTask.name = taskName.getText().toString();
+            mTask.note = noteText.getText().toString();
+            Log.d("TRUONG", "TASK::" + mTask);
             Intent i = new Intent();
-            i.putExtra("TASK_OUT", task);
+            i.putExtra("TASK_OUT", mTask);
             setResult(RESULT_OK, i);
             finish();
          }
@@ -103,26 +102,16 @@ public class DetailActivity extends AppCompatActivity
 
    @Override
    public void onFinishDate(int year, int month, int day) {
-      task.calendar.set(Calendar.YEAR, year);
-      task.calendar.set(Calendar.MONTH, month);
-      task.calendar.set(Calendar.DAY_OF_MONTH, day);
-      dueDate.setText(getDateFromCalendar(task.calendar));
+      mTask.calendar.set(Calendar.YEAR, year);
+      mTask.calendar.set(Calendar.MONTH, month);
+      mTask.calendar.set(Calendar.DAY_OF_MONTH, day);
+      dueDate.setText(Utils.getDateFromCalendar(mTask.calendar));
    }
 
    @Override
    public void onFinishTime(int hour, int minute) {
-      task.calendar.set(Calendar.HOUR_OF_DAY, hour);
-      task.calendar.set(Calendar.MINUTE, minute);
-      dueTime.setText(getTimeFromCalendar(task.calendar));
-   }
-
-   private String getDateFromCalendar(Calendar calendar) {
-      SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy");
-      return dateFormat.format(calendar.getTime());
-   }
-
-   private String getTimeFromCalendar(Calendar calendar) {
-      SimpleDateFormat timeFormat = new SimpleDateFormat("h:m a");
-      return timeFormat.format(calendar.getTime());
+      mTask.calendar.set(Calendar.HOUR_OF_DAY, hour);
+      mTask.calendar.set(Calendar.MINUTE, minute);
+      dueTime.setText(Utils.getTimeFromCalendar(mTask.calendar));
    }
 }
