@@ -119,6 +119,7 @@ public class DetailActivity extends AppCompatActivity
    @Override
    public void onFinishDate(int year, int month, int day) {
       Calendar calendar = Calendar.getInstance();
+      calendar.setTime(mTask.date);
       calendar.set(Calendar.YEAR, year);
       calendar.set(Calendar.MONTH, month);
       calendar.set(Calendar.DAY_OF_MONTH, day);
@@ -129,6 +130,7 @@ public class DetailActivity extends AppCompatActivity
    @Override
    public void onFinishTime(int hour, int minute) {
       Calendar calendar = Calendar.getInstance();
+      calendar.setTime(mTask.date);
       calendar.set(Calendar.HOUR_OF_DAY, hour);
       calendar.set(Calendar.MINUTE, minute);
       mTask.date = calendar.getTime();
