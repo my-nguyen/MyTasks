@@ -48,7 +48,6 @@ public class DetailActivity extends AppCompatActivity
       mTask = (Task)getIntent().getSerializableExtra("TASK_IN");
       if (mTask == null) {
          mTask = new Task();
-         Log.d("TRUONG", "new task");
       }
 
       taskName.setText(mTask.name);

@@ -39,7 +39,6 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
       if (date != null) {
          calendar.setTime(date);
       }
-      Log.d("TRUONG", "DatePickerFragment::date: " + date);
       int year = calendar.get(Calendar.YEAR);
       int monthOfYear = calendar.get(Calendar.MONTH);
       int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);

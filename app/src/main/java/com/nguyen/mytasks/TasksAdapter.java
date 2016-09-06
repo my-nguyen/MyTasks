@@ -98,7 +98,6 @@ public class TasksAdapter extends ArrayAdapter<Task> {
       if (requestCode == REQUEST_CODE) {
          if (resultCode == ((Activity)getContext()).RESULT_OK) {
             Task updatedTask = (Task)data.getSerializableExtra("TASK_OUT");
-            Log.d("TRUONG", "TaskAdapter::" + updatedTask);
             Task currentTask = getItem(mPosition);
             currentTask.update(updatedTask);
             notifyDataSetChanged();

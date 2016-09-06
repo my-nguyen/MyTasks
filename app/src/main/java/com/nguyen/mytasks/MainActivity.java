@@ -14,7 +14,7 @@ import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.TaskDeleteListener {
-   static int REQUEST_CODE = 100;
+   static int REQUEST_CODE = 101;
    TasksAdapter mAdapter;
 
    @Override
@@ -40,14 +40,21 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
    @Override
    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
       if (requestCode == REQUEST_CODE) {
+         // request code matches: this is data resulting from a click on FloatingActionButton,
+         // which is to add a new Task
          if (resultCode == RESULT_OK) {
-            mAdapter.onActivityResult(requestCode, resultCode, data);
+            Task task = (Task)data.getSerializableExtra("TASK_OUT");
+            mAdapter.add(task);
          }
+      } else {
+         // request code doesn't match: this is data from TasksAdapter (which is to edit an
+         // existing Task): forward this action to TasksAdapter
+         mAdapter.onActivityResult(requestCode, resultCode, data);
       }
    }
 
    @Override
-   public void onDeleteOK() {
+   public void onTaskDeleteOK() {
       mAdapter.onDeleteOK();
    }
 

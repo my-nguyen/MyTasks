@@ -12,7 +12,7 @@ import android.support.v7.app.AlertDialog;
  */
 public class TaskDeleteDialog extends DialogFragment {
    interface TaskDeleteListener {
-      void onDeleteOK();
+      void onTaskDeleteOK();
    }
 
    // empty constructor is required for DialogFragment
@@ -31,7 +31,7 @@ public class TaskDeleteDialog extends DialogFragment {
             TaskDeleteListener listener = (TaskDeleteListener)getActivity();
             // MainActivity activity = (MainActivity)getActivity();
             // TasksAdapter adapter = activity.getAdapter();
-            listener.onDeleteOK();
+            listener.onTaskDeleteOK();
          }
       });
       builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
