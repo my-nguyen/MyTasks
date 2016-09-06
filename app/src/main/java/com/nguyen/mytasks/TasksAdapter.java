@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,7 @@ import java.util.List;
 public class TasksAdapter extends ArrayAdapter<Task> {
    static final int REQUEST_CODE = 100;
    int mPosition;
+   Task mTaskToDelete;
 
    static class ViewHolder {
       TextView name;
@@ -77,7 +79,15 @@ public class TasksAdapter extends ArrayAdapter<Task> {
       viewHolder.delete.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {
-            remove(task);
+            // mark this task for delete
+            mTaskToDelete = task;
+            // TaskDeleteDialog, which is a DialogFragment, requires
+            // android.support.v4.app.FragmentManager and not android.app.FragmentManager
+            // the former is obtained via getSupportFragmentManager() which is from MainActivity
+            // the latter is obtained via getFragmentManager() which is from Activity
+            TaskDeleteDialog dialog = new TaskDeleteDialog();
+            FragmentManager manager = ((MainActivity)getContext()).getSupportFragmentManager();
+            dialog.show(manager, "TASK_DELETE_DIALOG");
          }
       });
 
@@ -94,5 +104,13 @@ public class TasksAdapter extends ArrayAdapter<Task> {
             notifyDataSetChanged();
          }
       }
+   }
+
+   // on the Task Delete dialog, when user presses OK, since the dialog is a fragment, it could
+   // only communicate back to the Activity invoking it, which is MainActivity, and not
+   // TasksAdapter. so MainActivity must implement the communication callback, which calls this
+   // method in order to do the actual removal of the Task record.
+   public void onDeleteOK() {
+      remove(mTaskToDelete);
    }
 }

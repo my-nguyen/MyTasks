@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -12,7 +13,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.TaskDeleteListener {
    static int REQUEST_CODE = 100;
    TasksAdapter mAdapter;
 
@@ -43,6 +44,12 @@ public class MainActivity extends AppCompatActivity {
             mAdapter.onActivityResult(requestCode, resultCode, data);
          }
       }
+   }
+
+   @Override
+   public void onDeleteOK() {
+      Log.d("TRUONG", "onDeleteOK");
+      mAdapter.onDeleteOK();
    }
 
    private List<Task> generateTasks() {
