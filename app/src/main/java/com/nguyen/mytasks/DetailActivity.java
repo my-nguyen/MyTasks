@@ -48,6 +48,9 @@ public class DetailActivity extends AppCompatActivity
       mTask = (Task)getIntent().getSerializableExtra("TASK_IN");
       if (mTask == null) {
          mTask = new Task();
+         getSupportActionBar().setTitle("New Task");
+      } else {
+         getSupportActionBar().setTitle("Edit Task");
       }
 
       taskName.setText(mTask.name);
