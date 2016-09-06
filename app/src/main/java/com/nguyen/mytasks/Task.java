@@ -17,17 +17,15 @@ public class Task implements Serializable {
    public String note;
 
    public Task() {
-      name = "";
-      date = new Date();
-      priority = 0;
-      note = "";
+      init("", new Date(), 0, "");
+   }
+
+   public Task(String name, long number, int priority, String note) {
+      init(name, new Date(number), priority, note);
    }
 
    public Task(String name, Date date, int priority, String note) {
-      this.name = name;
-      this.date = date;
-      this.priority = priority;
-      this.note = note;
+      init(name, date, priority, note);
    }
 
    public void update(Task rhs) {
@@ -48,5 +46,12 @@ public class Task implements Serializable {
       builder.append(priority).append(SEPARATOR);
       builder.append(note);
       return builder.toString();
+   }
+
+   private void init(String name, Date date, int priority, String note) {
+      this.name = name;
+      this.date = date;
+      this.priority = priority;
+      this.note = note;
    }
 }

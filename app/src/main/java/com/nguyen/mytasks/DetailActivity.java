@@ -21,8 +21,8 @@ import java.util.Date;
 public class DetailActivity extends AppCompatActivity
       implements DatePickerFragment.DatePickerListener, TimePickerFragment.TimePickerListener {
    Task mTask;
-   TextView dueDate;
-   TextView dueTime;
+   TextView mDueDate;
+   TextView mDueTime;
 
    public static Intent newIntent(Context context, Task task) {
       Intent i = new Intent(context, DetailActivity.class);
@@ -36,9 +36,9 @@ public class DetailActivity extends AppCompatActivity
       setContentView(R.layout.activity_detail);
 
       final EditText taskName = (EditText)findViewById(R.id.task_name);
-      dueDate = (TextView)findViewById(R.id.due_date);
+      mDueDate = (TextView)findViewById(R.id.due_date);
       ImageButton datePicker = (ImageButton)findViewById(R.id.date_picker);
-      dueTime = (TextView)findViewById(R.id.due_time);
+      mDueTime = (TextView)findViewById(R.id.due_time);
       ImageButton timePicker = (ImageButton)findViewById(R.id.time_picker);
       Spinner prioritySpinner = (Spinner)findViewById(R.id.priority_spinner);
       final EditText noteText = (EditText)findViewById(R.id.note_text);
@@ -56,8 +56,8 @@ public class DetailActivity extends AppCompatActivity
       taskName.setText(mTask.name);
 
       final Date date = mTask.date;
-      dueDate.setText(Utils.getLongDateFromDate(date));
-      dueTime.setText(Utils.getTimeFromDate(date));
+      mDueDate.setText(Utils.getLongDateFromDate(date));
+      mDueTime.setText(Utils.getTimeFromDate(date));
 
       datePicker.setOnClickListener(new View.OnClickListener() {
          @Override
@@ -123,7 +123,7 @@ public class DetailActivity extends AppCompatActivity
       calendar.set(Calendar.MONTH, month);
       calendar.set(Calendar.DAY_OF_MONTH, day);
       mTask.date = calendar.getTime();
-      dueDate.setText(Utils.getLongDateFromDate(mTask.date));
+      mDueDate.setText(Utils.getLongDateFromDate(mTask.date));
    }
 
    @Override
@@ -132,6 +132,6 @@ public class DetailActivity extends AppCompatActivity
       calendar.set(Calendar.HOUR_OF_DAY, hour);
       calendar.set(Calendar.MINUTE, minute);
       mTask.date = calendar.getTime();
-      dueTime.setText(Utils.getTimeFromDate(mTask.date));
+      mDueTime.setText(Utils.getTimeFromDate(mTask.date));
    }
 }

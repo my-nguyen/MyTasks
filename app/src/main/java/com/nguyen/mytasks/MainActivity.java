@@ -64,9 +64,12 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
       Calendar calendar = Calendar.getInstance();
       int add = -(names.size() / 2);
       calendar.add(Calendar.DAY_OF_MONTH, add);
+      TaskDatabase database = TaskDatabase.instance(this);
       for (String name : names) {
          Task task = new Task(name, calendar.getTime(), 0, "Empty note");
          tasks.add(task);
+         // save to local database
+         database.add(task);
          calendar.add(Calendar.DAY_OF_MONTH, 1);
       }
       return tasks;
