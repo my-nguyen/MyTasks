@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -54,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
       calendar.add(Calendar.DAY_OF_MONTH, add);
       for (String name : names) {
          Task task = new Task(name, calendar.getTime(), 0, "Empty note");
-         Log.d("TRUONG", "generateTasks::" + task);
          tasks.add(task);
          calendar.add(Calendar.DAY_OF_MONTH, 1);
       }

@@ -51,7 +51,7 @@ public class DetailActivity extends AppCompatActivity
          taskName.setText(mTask.name);
 
          final Date date = mTask.date;
-         dueDate.setText(Utils.getDateFromDate(date));
+         dueDate.setText(Utils.getLongDateFromDate(date));
          dueTime.setText(Utils.getTimeFromDate(date));
 
          datePicker.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +108,7 @@ public class DetailActivity extends AppCompatActivity
       calendar.set(Calendar.MONTH, month);
       calendar.set(Calendar.DAY_OF_MONTH, day);
       mTask.date = calendar.getTime();
-      dueDate.setText(Utils.getDateFromDate(mTask.date));
+      dueDate.setText(Utils.getLongDateFromDate(mTask.date));
    }
 
    @Override

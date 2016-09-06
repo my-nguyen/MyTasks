@@ -3,6 +3,7 @@ package com.nguyen.mytasks;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +24,7 @@ public class TasksAdapter extends ArrayAdapter<Task> {
    static class ViewHolder {
       TextView name;
       TextView date;
+      TextView priority;
       ImageButton edit;
       ImageButton delete;
    }
@@ -40,6 +42,7 @@ public class TasksAdapter extends ArrayAdapter<Task> {
          viewHolder = new ViewHolder();
          viewHolder.name = (TextView)convertView.findViewById(R.id.name);
          viewHolder.date = (TextView)convertView.findViewById(R.id.date);
+         viewHolder.priority = (TextView)convertView.findViewById(R.id.priority);
          viewHolder.edit = (ImageButton) convertView.findViewById(R.id.edit);
          viewHolder.delete = (ImageButton)convertView.findViewById(R.id.delete);
          convertView.setTag(viewHolder);
@@ -49,13 +52,32 @@ public class TasksAdapter extends ArrayAdapter<Task> {
 
       final Task task = getItem(position);
       viewHolder.name.setText(task.name);
-      viewHolder.date.setText(Utils.getDateFromDate(task.date));
+
+      long diff = System.currentTimeMillis() - task.date.getTime();
+      int textColor = diff > 0 ? Color.RED : Color.GREEN;
+      viewHolder.date.setTextColor(textColor);
+      String date = Utils.getShortDateFromDate(task.date);
+      String time = Utils.getTimeFromDate(task.date);
+      viewHolder.date.setText(date + " at " + time);
+
+      String[] priorities = { "High", "Medium", "Low" };
+      viewHolder.priority.setTextColor(textColor);
+      viewHolder.priority.setText(priorities[task.priority]);
+
       viewHolder.edit.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {
+            // save the current position, so onActivityResult() can update properly
             mPosition = position;
             Intent i = DetailActivity.newIntent(getContext(), task);
             ((Activity)getContext()).startActivityForResult(i, REQUEST_CODE);
+         }
+      });
+
+      viewHolder.delete.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View view) {
+            remove(task);
          }
       });
 
