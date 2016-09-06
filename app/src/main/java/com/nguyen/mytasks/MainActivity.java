@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
 
    @Override
    public void onDeleteOK() {
-      Log.d("TRUONG", "onDeleteOK");
       mAdapter.onDeleteOK();
    }
 

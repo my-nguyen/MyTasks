@@ -43,59 +43,72 @@ public class DetailActivity extends AppCompatActivity
       Spinner prioritySpinner = (Spinner)findViewById(R.id.priority_spinner);
       final EditText noteText = (EditText)findViewById(R.id.note_text);
       Button save = (Button)findViewById(R.id.save);
+      Button cancel = (Button)findViewById(R.id.cancel);
 
       mTask = (Task)getIntent().getSerializableExtra("TASK_IN");
       if (mTask == null) {
          mTask = new Task();
-      } else {
-         taskName.setText(mTask.name);
-
-         final Date date = mTask.date;
-         dueDate.setText(Utils.getLongDateFromDate(date));
-         dueTime.setText(Utils.getTimeFromDate(date));
-
-         datePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               DialogFragment fragment = DatePickerFragment.newInstance(date);
-               fragment.show(getSupportFragmentManager(), "DATE_PICKER");
-            }
-         });
-         timePicker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               DialogFragment fragment = TimePickerFragment.newInstance(date);
-               fragment.show(getSupportFragmentManager(), "TIME_PICKER");
-            }
-         });
-
-         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-               R.array.priority_array, android.R.layout.simple_spinner_item);
-         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-         prioritySpinner.setAdapter(adapter);
-         prioritySpinner.setSelection(mTask.priority);
-         prioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-               mTask.priority = position;
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-         });
-
-         noteText.setText(mTask.note);
+         Log.d("TRUONG", "new task");
       }
+
+      taskName.setText(mTask.name);
+
+      final Date date = mTask.date;
+      dueDate.setText(Utils.getLongDateFromDate(date));
+      dueTime.setText(Utils.getTimeFromDate(date));
+
+      datePicker.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View view) {
+            DialogFragment fragment = DatePickerFragment.newInstance(date);
+            fragment.show(getSupportFragmentManager(), "DATE_PICKER");
+         }
+      });
+      timePicker.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View view) {
+            DialogFragment fragment = TimePickerFragment.newInstance(date);
+            fragment.show(getSupportFragmentManager(), "TIME_PICKER");
+         }
+      });
+
+      ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+            R.array.priority_array, android.R.layout.simple_spinner_item);
+      adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+      prioritySpinner.setAdapter(adapter);
+      prioritySpinner.setSelection(mTask.priority);
+      prioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+         @Override
+         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            mTask.priority = position;
+         }
+         @Override
+         public void onNothingSelected(AdapterView<?> parent) {
+         }
+      });
+
+      noteText.setText(mTask.note);
 
       save.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {
+            // save data; the date, time and priority have all been saved already
             mTask.name = taskName.getText().toString();
             mTask.note = noteText.getText().toString();
-            Log.d("TRUONG", "TASK::" + mTask);
+
+            // send the data back to the calling Activity
             Intent i = new Intent();
             i.putExtra("TASK_OUT", mTask);
             setResult(RESULT_OK, i);
+
+            // dismiss this Activity
+            finish();
+         }
+      });
+
+      cancel.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View view) {
             finish();
          }
       });
