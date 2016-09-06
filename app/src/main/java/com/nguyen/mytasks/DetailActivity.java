@@ -3,9 +3,12 @@ package com.nguyen.mytasks;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.widget.ShareActionProvider;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -135,5 +138,23 @@ public class DetailActivity extends AppCompatActivity
       calendar.set(Calendar.MINUTE, minute);
       mTask.date = calendar.getTime();
       mDueTime.setText(Utils.getTimeFromDate(mTask.date));
+   }
+
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+      // get the MenuItem with ShareActionProvider
+      getMenuInflater().inflate(R.menu.menu_detail, menu);
+      MenuItem item = menu.findItem(R.id.share_action);
+
+      // get reference to the ShareActionProvider
+      ShareActionProvider provider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+
+      // create and invoke implicit intent with ACTION_SEND
+      Intent intent = new Intent(Intent.ACTION_SEND);
+      intent.setType("text/plain");
+      intent.putExtra(Intent.EXTRA_TEXT, mTask.toString());
+      provider.setShareIntent(intent);
+
+      return super.onCreateOptionsMenu(menu);
    }
 }
