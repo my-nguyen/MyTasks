@@ -56,7 +56,18 @@ public class TasksAdapter extends ArrayAdapter<Task> {
       viewHolder.name.setText(task.name);
 
       long diff = System.currentTimeMillis() - task.date.getTime();
-      int textColor = diff > 0 ? Color.RED : Color.GREEN;
+      int textColor;
+      if (diff > 0) {
+         // task has expired
+         textColor = Color.RED;
+      } else if (diff >= -86400000) {
+         // task scheduled within one day
+         textColor = Color.parseColor("#FFD700");
+      } else {
+         // task beyond one day
+         // textColor = Color.GREEN;
+         textColor = Color.parseColor("#006400");
+      }
       viewHolder.date.setTextColor(textColor);
       String date = Utils.getShortDateFromDate(task.date);
       String time = Utils.getTimeFromDate(task.date);
