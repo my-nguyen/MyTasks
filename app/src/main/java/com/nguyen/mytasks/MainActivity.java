@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
 
@@ -72,16 +73,23 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
          // request code matches: this is data resulting from a click on FloatingActionButton,
          // which is to add a new Task
          if (resultCode == RESULT_OK) {
+            // extract the Task sent back from DetailActivity
             Task task = (Task)data.getSerializableExtra("TASK_OUT");
+            // add the new Task into the current list in memory
             mAdapter.add(task);
+            // save the new Task to local database
             mDatabase.add(task);
+            // sort the list of Tasks and update the UI
             sortByCriteria();
+            Toast.makeText(this, "A new task has been created", Toast.LENGTH_SHORT).show();
          }
       } else {
          // request code doesn't match: this is data from TasksAdapter (which is to edit an
          // existing Task): forward this action to TasksAdapter
          mAdapter.onActivityResult(requestCode, resultCode, data);
+         // sort the list of Tasks and update the UI
          sortByCriteria();
+         Toast.makeText(this, "The selected task has been updated", Toast.LENGTH_SHORT).show();
       }
    }
 
@@ -90,18 +98,24 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
       mAdapter.onDeleteOK();
    }
 
+   // this method sorts the tasks in the current adapter by a criteria (Date, Name or Priority),
+   // then refresh to UI to reflect the sorted list
    private void sortByCriteria() {
       switch (mCriteria) {
          case 0:
+            // sort by Date
             mAdapter.sort(new DateComparator());
             break;
          case 1:
+            // sort by Name
             mAdapter.sort(new NameComparator());
             break;
          case 2:
+            // sort by Priority
             mAdapter.sort(new PriorityComparator());
             break;
       }
+      // cause the UI to refresh to show the updated list
       mAdapter.notifyDataSetChanged();
    }
 

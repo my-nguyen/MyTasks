@@ -47,7 +47,6 @@ public class TaskDatabase {
 
             Task task = new Task(uuid, name, new Date(date), priority, note);
             tasks.add(task);
-            Log.d("TRUONG", task.toString());
             cursor.moveToNext();
          }
       } finally {
