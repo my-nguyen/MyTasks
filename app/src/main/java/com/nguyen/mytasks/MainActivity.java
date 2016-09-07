@@ -89,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
          case 1:
             mAdapter.sort(new NameComparator());
             break;
+         case 2:
+            mAdapter.sort(new PriorityComparator());
+            break;
       }
       mAdapter.notifyDataSetChanged();
    }
@@ -109,15 +112,22 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
 
    class DateComparator implements Comparator<Task> {
       @Override
-      public int compare(Task task, Task t1) {
-         return (int)(task.date.getTime() - t1.date.getTime());
+      public int compare(Task task1, Task task2) {
+         return (int)(task1.date.getTime() - task2.date.getTime());
       }
    }
 
    class NameComparator implements Comparator<Task> {
       @Override
-      public int compare(Task task, Task t1) {
-         return task.name.compareTo(t1.name);
+      public int compare(Task task1, Task task2) {
+         return task1.name.compareTo(task2.name);
+      }
+   }
+
+   class PriorityComparator implements Comparator<Task> {
+      @Override
+      public int compare(Task task1, Task task2) {
+         return task1.priority - task2.priority;
       }
    }
 }

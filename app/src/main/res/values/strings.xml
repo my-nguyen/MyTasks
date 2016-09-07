@@ -17,5 +17,6 @@
     <string-array name="sort_order_array">
         <item>Date</item>
         <item>Name</item>
+        <item>Priority</item>
     </string-array>
 </resources>
