@@ -111,6 +111,7 @@ public class TasksAdapter extends ArrayAdapter<Task> {
             Task updatedTask = (Task)data.getSerializableExtra("TASK_OUT");
             Task currentTask = getItem(mPosition);
             currentTask.update(updatedTask);
+            TaskDatabase.instance(getContext()).update(updatedTask);
          }
       }
    }

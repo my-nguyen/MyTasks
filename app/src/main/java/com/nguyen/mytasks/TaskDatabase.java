@@ -4,9 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by My on 9/6/2016.
@@ -36,12 +39,15 @@ public class TaskDatabase {
       try {
          cursor.moveToFirst();
          while (!cursor.isAfterLast()) {
+            String uuid = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_UUID));
             String name = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_NAME));
             long date = cursor.getLong(cursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_DATE));
             int priority = cursor.getInt(cursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_PRIORITY));
             String note = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_NOTE));
-            Task task = new Task(name, date, priority, note);
+
+            Task task = new Task(uuid, name, new Date(date), priority, note);
             tasks.add(task);
+            Log.d("TRUONG", task.toString());
             cursor.moveToNext();
          }
       } finally {
@@ -56,8 +62,18 @@ public class TaskDatabase {
       mDatabase.insert(TaskContract.TaskEntry.TABLE_NAME, null, values);
    }
 
+   public void update(Task task) {
+      ContentValues values = getContentValues(task);
+      mDatabase.update(
+            TaskContract.TaskEntry.TABLE_NAME,
+            values,
+            TaskContract.TaskEntry.COLUMN_UUID + " = ?",
+            new String[] { task.uuid.toString() } );
+   }
+
    private ContentValues getContentValues(Task task) {
       ContentValues values = new ContentValues();
+      values.put(TaskContract.TaskEntry.COLUMN_UUID, task.uuid);
       values.put(TaskContract.TaskEntry.COLUMN_NAME, task.name);
       values.put(TaskContract.TaskEntry.COLUMN_DATE, task.date.getTime());
       values.put(TaskContract.TaskEntry.COLUMN_PRIORITY, task.priority);

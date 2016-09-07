@@ -3,11 +3,14 @@ package com.nguyen.mytasks;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by My on 9/4/2016.
  */
 public class Task implements Serializable {
+   // UUID is used to identify the single record to update in the database
+   public String uuid;
    public String name;
    // use Date instead of Calendar here because Calendar is a global object, so adding or subtracting
    // days on a Calendar object will have its global effect. whereas Date is local, so such
@@ -17,15 +20,11 @@ public class Task implements Serializable {
    public String note;
 
    public Task() {
-      init("", new Date(), 0, "");
+      init(UUID.randomUUID().toString(), "", new Date(), 0, "");
    }
 
-   public Task(String name, long number, int priority, String note) {
-      init(name, new Date(number), priority, note);
-   }
-
-   public Task(String name, Date date, int priority, String note) {
-      init(name, date, priority, note);
+   public Task(String uuid, String name, Date date, int priority, String note) {
+      init(uuid, name, date, priority, note);
    }
 
    public void update(Task rhs) {
@@ -48,7 +47,8 @@ public class Task implements Serializable {
       return builder.toString();
    }
 
-   private void init(String name, Date date, int priority, String note) {
+   private void init(String uuid, String name, Date date, int priority, String note) {
+      this.uuid = uuid;
       this.name = name;
       this.date = date;
       this.priority = priority;

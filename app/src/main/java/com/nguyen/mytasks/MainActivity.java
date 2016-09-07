@@ -10,23 +10,31 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import com.facebook.stetho.Stetho;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.TaskDeleteListener {
    static int REQUEST_CODE = 101;
    TasksAdapter mAdapter;
+   // sort criteria, which is sort by Name by default
    int mCriteria = 0;
+   TaskDatabase mDatabase;
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_main);
 
-      List<Task> tasks = generateTasks();
+      // Stetho.initializeWithDefaults(this);
+      mDatabase = TaskDatabase.instance(this);
+      // List<Task> tasks = generateTasks();
+      List<Task> tasks = mDatabase.query();
       mAdapter = new TasksAdapter(this, tasks);
       ListView list = (ListView)findViewById(R.id.tasks);
       list.setAdapter(mAdapter);
@@ -66,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
          if (resultCode == RESULT_OK) {
             Task task = (Task)data.getSerializableExtra("TASK_OUT");
             mAdapter.add(task);
+            mDatabase.add(task);
             sortByCriteria();
          }
       } else {
@@ -114,6 +123,7 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
       List<Task> tasks = new ArrayList<>();
 
       while (names.size() != 0) {
+         String uuid = UUID.randomUUID().toString();
          // pick a random name from the List
          int randomName = random.nextInt(names.size());
          // remove the name from the List when done
@@ -131,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
          // pick a random priority (0 = High, 1 = Medium, and 2 = Low)
          int randomPriority = random.nextInt(3);
          // create a new Task with the random name, random date, and random priority
-         Task task = new Task(name, calendar.getTime(), randomPriority, "Empty");
+         Task task = new Task(uuid, name, calendar.getTime(), randomPriority, "Empty");
          tasks.add(task);
       }
       return tasks;
