@@ -35,7 +35,7 @@
         android:layout_toLeftOf="@+id/delete"
         android:background="@android:color/transparent"
         android:layout_centerVertical="true"
-        android:layout_margin="@dimen/item_margin"
+        android:layout_marginLeft="@dimen/text_horizontal_margin"
         android:src="@drawable/edit_button"/>
     <ImageButton
         android:id="@+id/delete"
@@ -45,6 +45,6 @@
         android:layout_alignParentRight="true"
         android:background="@android:color/transparent"
         android:layout_centerVertical="true"
-        android:layout_margin="@dimen/item_margin"
+        android:layout_marginLeft="@dimen/item_margin"
         android:src="@drawable/delete_button"/>
 </RelativeLayout>
