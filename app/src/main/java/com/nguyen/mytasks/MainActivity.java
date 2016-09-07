@@ -11,6 +11,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.stetho.Stetho;
 
 import java.util.ArrayList;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
       setContentView(R.layout.activity_main);
 
       // Stetho.initializeWithDefaults(this);
+
       mDatabase = TaskDatabase.instance(this);
       // List<Task> tasks = generateTasks();
       List<Task> tasks = mDatabase.query();

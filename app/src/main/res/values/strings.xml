@@ -9,6 +9,7 @@
     <string name="cancel_button">Cancel</string>
     <string name="share_action">Share</string>
     <string name="sort_label">Sort by: </string>
+    <string name="facebook_app_id">532575913608612</string>
     <string-array name="priority_array">
         <item>High</item>
         <item>Medium</item>
