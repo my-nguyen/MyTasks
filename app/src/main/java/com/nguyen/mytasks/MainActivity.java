@@ -11,10 +11,10 @@ import android.widget.ListView;
 import android.widget.Spinner;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.TaskDeleteListener {
    static int REQUEST_CODE = 101;
@@ -97,15 +97,42 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
    }
 
    private List<Task> generateTasks() {
-      List<String> names = Arrays.asList("One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten");
+      // create an array of String's, for ease of declaration, as opposed to that of a List
+      String[] strings = {
+            "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
+            "Ein", "Zwei", "Drei", "Vier", "Funf", "Sechs", "Sieben", "Acht", "Neun", "Zehn",
+            "Un", "Deux", "Trois", "Quatre", "Cinq", "Six", "Sept", "Huit", "Neuf", "Dix",
+            "Uno", "Dos", "Tres", "Quatro", "Cinco", "Seis", "Siete", "Ocho", "Nueve", "Diez"
+      };
+      // copy the contents of the array into a List
+      List<String> names = new ArrayList<>();
+      for (String string : strings) {
+         names.add(string);
+      }
+      // prepare the random generator
+      Random random = new Random();
       List<Task> tasks = new ArrayList<>();
-      Calendar calendar = Calendar.getInstance();
-      int add = -(names.size() / 2);
-      calendar.add(Calendar.DAY_OF_MONTH, add);
-      for (String name : names) {
-         Task task = new Task(name, calendar.getTime(), 0, "Empty note");
+
+      while (names.size() != 0) {
+         // pick a random name from the List
+         int randomName = random.nextInt(names.size());
+         // remove the name from the List when done
+         String name = names.remove(randomName);
+         // pick a random day from 5 days in the past until 5 days in the future
+         Calendar calendar = Calendar.getInstance();
+         int randomDay = random.nextInt(10) - 5;
+         calendar.add(Calendar.DAY_OF_MONTH, randomDay);
+         // pick a random hour
+         int randomHour = random.nextInt(24);
+         calendar.set(Calendar.HOUR_OF_DAY, randomHour);
+         // pick a random minute
+         int randomMinute = random.nextInt(60);
+         calendar.set(Calendar.MINUTE, randomMinute);
+         // pick a random priority (0 = High, 1 = Medium, and 2 = Low)
+         int randomPriority = random.nextInt(3);
+         // create a new Task with the random name, random date, and random priority
+         Task task = new Task(name, calendar.getTime(), randomPriority, "Empty");
          tasks.add(task);
-         calendar.add(Calendar.DAY_OF_MONTH, 1);
       }
       return tasks;
    }
