@@ -39,7 +39,6 @@ public class LoginActivity extends AppCompatActivity {
             info.setText("User ID: " + loginResult.getAccessToken().getUserId() +
                   "\n" + "Auth Token: " + loginResult.getAccessToken().getToken());
             String message = "User " + loginResult.getAccessToken().getUserId() + " logged in successfully";
-            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
             */
             Intent i = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(i);
