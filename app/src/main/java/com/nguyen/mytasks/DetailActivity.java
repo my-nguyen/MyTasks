@@ -27,6 +27,7 @@ public class DetailActivity extends AppCompatActivity
    TextView mDueDate;
    TextView mDueTime;
 
+   // convenient static method to pass data into DetailActivity
    public static Intent newIntent(Context context, Task task) {
       Intent i = new Intent(context, DetailActivity.class);
       i.putExtra("TASK_IN", task);
@@ -38,6 +39,7 @@ public class DetailActivity extends AppCompatActivity
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_detail);
 
+      // extract all the view ids
       final EditText taskName = (EditText)findViewById(R.id.task_name);
       mDueDate = (TextView)findViewById(R.id.due_date);
       ImageButton datePicker = (ImageButton)findViewById(R.id.date_picker);
@@ -48,20 +50,26 @@ public class DetailActivity extends AppCompatActivity
       Button save = (Button)findViewById(R.id.save);
       Button cancel = (Button)findViewById(R.id.cancel);
 
+      // extract the Task passed in (from either MainActivity or TasksAdapter)
       mTask = (Task)getIntent().getSerializableExtra("TASK_IN");
       if (mTask == null) {
+         // create a new Task if there isn't one already. the Task constructor will create a Date
+         // object that includes the date and time necessary for this Activity
          mTask = new Task();
          getSupportActionBar().setTitle("New Task");
       } else {
          getSupportActionBar().setTitle("Edit Task");
       }
 
+      // set the Task name
       taskName.setText(mTask.name);
 
+      // set the Task date and time
       final Date date = mTask.date;
       mDueDate.setText(Utils.getLongDateFromDate(date));
       mDueTime.setText(Utils.getTimeFromDate(date));
 
+      // set up the DatePickerFragment
       datePicker.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {
@@ -69,6 +77,8 @@ public class DetailActivity extends AppCompatActivity
             fragment.show(getSupportFragmentManager(), "DATE_PICKER");
          }
       });
+
+      // set up the TimePickerFragment
       timePicker.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {
@@ -77,10 +87,12 @@ public class DetailActivity extends AppCompatActivity
          }
       });
 
+      // set up the Priority spinner
       ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
             R.array.priority_array, android.R.layout.simple_spinner_item);
       adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
       prioritySpinner.setAdapter(adapter);
+      // default priority is fed from Task
       prioritySpinner.setSelection(mTask.priority);
       prioritySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
          @Override
@@ -92,16 +104,18 @@ public class DetailActivity extends AppCompatActivity
          }
       });
 
+      // set up the Note
       noteText.setText(mTask.note);
 
+      // set up the Save button
       save.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {
-            // save data; the date, time and priority have all been saved already
+            // save name and note; the date, time and priority have all been saved already
             mTask.name = taskName.getText().toString();
             mTask.note = noteText.getText().toString();
 
-            // send the data back to the calling Activity
+            // send the data back to MainActivity
             Intent i = new Intent();
             i.putExtra("TASK_OUT", mTask);
             setResult(RESULT_OK, i);
@@ -111,6 +125,7 @@ public class DetailActivity extends AppCompatActivity
          }
       });
 
+      // set up the Cancel button
       cancel.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View view) {
@@ -119,6 +134,7 @@ public class DetailActivity extends AppCompatActivity
       });
    }
 
+   // callback method from DatePickerFragment
    @Override
    public void onFinishDate(int year, int month, int day) {
       Calendar calendar = Calendar.getInstance();
@@ -126,17 +142,22 @@ public class DetailActivity extends AppCompatActivity
       calendar.set(Calendar.YEAR, year);
       calendar.set(Calendar.MONTH, month);
       calendar.set(Calendar.DAY_OF_MONTH, day);
+      // save the year, month and day in Task
       mTask.date = calendar.getTime();
+      // update the Due Date TextView
       mDueDate.setText(Utils.getLongDateFromDate(mTask.date));
    }
 
+   // callback method from TimePickerFragment
    @Override
    public void onFinishTime(int hour, int minute) {
       Calendar calendar = Calendar.getInstance();
       calendar.setTime(mTask.date);
       calendar.set(Calendar.HOUR_OF_DAY, hour);
       calendar.set(Calendar.MINUTE, minute);
+      // save the hour and minute in Task
       mTask.date = calendar.getTime();
+      // update the Due Time TextView
       mDueTime.setText(Utils.getTimeFromDate(mTask.date));
    }
 

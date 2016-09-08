@@ -39,12 +39,14 @@ public class TaskDatabase {
       try {
          cursor.moveToFirst();
          while (!cursor.isAfterLast()) {
+            // retrieve all data worth of one Task from the database
             String uuid = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_UUID));
             String name = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_NAME));
             long date = cursor.getLong(cursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_DATE));
             int priority = cursor.getInt(cursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_PRIORITY));
             String note = cursor.getString(cursor.getColumnIndex(TaskContract.TaskEntry.COLUMN_NOTE));
 
+            // construct a Task in memory based on the database Task
             Task task = new Task(uuid, name, new Date(date), priority, note);
             tasks.add(task);
             cursor.moveToNext();
@@ -63,11 +65,15 @@ public class TaskDatabase {
 
    public void update(Task task) {
       ContentValues values = getContentValues(task);
-      mDatabase.update(
-            TaskContract.TaskEntry.TABLE_NAME,
-            values,
-            TaskContract.TaskEntry.COLUMN_UUID + " = ?",
-            new String[] { task.uuid.toString() } );
+      String whereClause = TaskContract.TaskEntry.COLUMN_UUID + " = ?";
+      String[] whereArgs = { task.uuid };
+      mDatabase.update(TaskContract.TaskEntry.TABLE_NAME, values, whereClause, whereArgs);
+   }
+
+   public void delete(Task task) {
+      String whereClause = TaskContract.TaskEntry.COLUMN_UUID + " = ?";
+      String[] whereArgs = { task.uuid };
+      mDatabase.delete(TaskContract.TaskEntry.TABLE_NAME, whereClause, whereArgs);
    }
 
    private ContentValues getContentValues(Task task) {

@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.widget.DatePicker;
 
 import java.util.Calendar;
@@ -19,6 +18,7 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
       void onFinishDate(int year, int month, int day);
    }
 
+   // convenient static method to pass data into this Fragment
    public static DatePickerFragment newInstance(Date date)
    {
       Bundle bundle = new Bundle();
@@ -36,18 +36,18 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
       // convert the Date object to a Calendar object, to extract the year, month and day, for
       // displaying them in the DatePickerDialog
       Calendar calendar = Calendar.getInstance();
-      if (date != null) {
-         calendar.setTime(date);
-      }
+      calendar.setTime(date);
       int year = calendar.get(Calendar.YEAR);
-      int monthOfYear = calendar.get(Calendar.MONTH);
-      int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-      return new DatePickerDialog(getActivity(), this, year, monthOfYear, dayOfMonth);
+      int month = calendar.get(Calendar.MONTH);
+      int day = calendar.get(Calendar.DAY_OF_MONTH);
+      // display the actual DatePickerDialog
+      return new DatePickerDialog(getActivity(), this, year, month, day);
    }
 
+   // callback from DatePickerDialog: pass on the year, month, and day to the calling Activity
    @Override
-   public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+   public void onDateSet(DatePicker datePicker, int year, int month, int day) {
       DatePickerListener listener = (DatePickerListener)getActivity();
-      listener.onFinishDate(i, i1, i2);
+      listener.onFinishDate(year, month, day);
    }
 }

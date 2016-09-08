@@ -11,10 +11,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
-import com.facebook.stetho.Stetho;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
@@ -25,9 +21,8 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.TaskDeleteListener {
    static int REQUEST_CODE = 101;
    TasksAdapter mAdapter;
-   // sort criteria, which is sort by Name by default
+   // sort criteria, which is 0 (sort by Name) by default
    int mCriteria = 0;
-   TaskDatabase mDatabase;
 
    @Override
    protected void onCreate(Bundle savedInstanceState) {
@@ -36,18 +31,21 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
 
       // Stetho.initializeWithDefaults(this);
 
-      mDatabase = TaskDatabase.instance(this);
+      // read existing Task's from the local database
+      List<Task> tasks = TaskDatabase.instance(this).query();
       // List<Task> tasks = generateTasks();
-      List<Task> tasks = mDatabase.query();
+      // set up the adapter for the ListView
       mAdapter = new TasksAdapter(this, tasks);
       ListView list = (ListView)findViewById(R.id.tasks);
       list.setAdapter(mAdapter);
 
+      // set up the spinner to sort by Date, Name, or Priority
       Spinner sortOrder = (Spinner)findViewById(R.id.sort_spinner);
       ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
             R.array.sort_order_array, android.R.layout.simple_spinner_item);
       adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
       sortOrder.setAdapter(adapter);
+      // the default criteria is sort by Date
       sortOrder.setSelection(adapter.getPosition("By Date"));
       sortOrder.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
          @Override
@@ -60,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
          }
       });
 
+      // set up FloatingActionButton so that upon a click, it will lead to DetailActivity to create
+      // a new Task
       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
       fab.setOnClickListener(new View.OnClickListener() {
          @Override
@@ -73,36 +73,36 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
    @Override
    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
       if (requestCode == REQUEST_CODE) {
-         // request code matches: this is data resulting from a click on FloatingActionButton,
-         // which is to add a new Task
+         // request code matches: this data returned from DetailActivity, which was initiated by
+         // FloatingActionButton, so add a new Task
          if (resultCode == RESULT_OK) {
             // extract the Task sent back from DetailActivity
             Task task = (Task)data.getSerializableExtra("TASK_OUT");
             // add the new Task into the current list in memory
             mAdapter.add(task);
             // save the new Task to local database
-            mDatabase.add(task);
+            TaskDatabase.instance(this).add(task);
             // sort the list of Tasks and update the UI
             sortByCriteria();
             Toast.makeText(this, "A new task has been created", Toast.LENGTH_SHORT).show();
          }
       } else {
-         // request code doesn't match: this is data from TasksAdapter (which is to edit an
-         // existing Task): forward this action to TasksAdapter
+         // request code doesn't match: this data returned from DetailActivity, and was initiated by
+         // TasksAdapter, so forward the data to TasksAdapter to update the list of Tasks in memory
          mAdapter.onActivityResult(requestCode, resultCode, data);
          // sort the list of Tasks and update the UI
          sortByCriteria();
-         Toast.makeText(this, "The selected task has been updated", Toast.LENGTH_SHORT).show();
       }
    }
 
+   // callback from TaskDeleteDialog: forward the action to TasksAdapter
    @Override
    public void onTaskDeleteOK() {
       mAdapter.onDeleteOK();
    }
 
-   // this method sorts the tasks in the current adapter by a criteria (Date, Name or Priority),
-   // then refresh to UI to reflect the sorted list
+   // this method sorts the Tasks in the current adapter by a criteria (Date, Name or Priority),
+   // then refresh the UI to reflect the sorted list
    private void sortByCriteria() {
       switch (mCriteria) {
          case 0:
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
    }
 
    private List<Task> generateTasks() {
-      // create an array of String's, for ease of declaration, as opposed to that of a List
+      // create a String[] instead of a List<String> for ease of declaration
       String[] strings = {
             "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
             "Ein", "Zwei", "Drei", "Vier", "Funf", "Sechs", "Sieben", "Acht", "Neun", "Zehn",
@@ -140,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
       List<Task> tasks = new ArrayList<>();
 
       while (names.size() != 0) {
+         // pick a random UUID
          String uuid = UUID.randomUUID().toString();
          // pick a random name from the List
          int randomName = random.nextInt(names.size());
@@ -157,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
          calendar.set(Calendar.MINUTE, randomMinute);
          // pick a random priority (0 = High, 1 = Medium, and 2 = Low)
          int randomPriority = random.nextInt(3);
-         // create a new Task with the random name, random date, and random priority
+         // create a new Task with the random UUID, random name, random date, and random priority
          Task task = new Task(uuid, name, calendar.getTime(), randomPriority, "Empty");
          tasks.add(task);
       }
