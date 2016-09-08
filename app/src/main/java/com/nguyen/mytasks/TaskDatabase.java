@@ -58,7 +58,7 @@ public class TaskDatabase {
       return tasks;
    }
 
-   public void add(Task task) {
+   public void insert(Task task) {
       ContentValues values = getContentValues(task);
       mDatabase.insert(TaskContract.TaskEntry.TABLE_NAME, null, values);
    }

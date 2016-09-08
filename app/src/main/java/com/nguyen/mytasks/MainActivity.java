@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements TaskDeleteDialog.
             // add the new Task into the current list in memory
             mAdapter.add(task);
             // save the new Task to local database
-            TaskDatabase.instance(this).add(task);
+            TaskDatabase.instance(this).insert(task);
             // sort the list of Tasks and update the UI
             sortByCriteria();
             Toast.makeText(this, "A new task has been created", Toast.LENGTH_SHORT).show();
